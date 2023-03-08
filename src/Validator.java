@@ -202,7 +202,54 @@ public class Validator {
         return true;
     }
 
+    /* A valid email address consists of a prefix, '@' symbol, and domain.
+      Both the prefix and the domain must be written in acceptable formats.  */
+    public static boolean isEmail(String str) {
+        //check if email address is a valid email address. If not, return false
+        if (!singleAtSign(str)) {
+            return false;}
+        // If email address is in acceptable formats, split it into 2 parts, prefix and suffix
+        String prefix = fetchBeforeAt(str);
+        String suffix = fetchAfterAt(str);
+        // check if prefix and suffix is written in acceptable formats. If not, return false
+        if (!isPrefix(prefix) || !isDomain(suffix)) {
+            return false;
+        }
+        // if both prefix and suffix follow rules, return true
+        return true;
+    }
 
+
+    /* check if a string is a valid username, return lowercase valid username if all conditions are met
+       empty String "" otherwise          */
+    public static String isUsername(String str) {
+        // Contains seven or less characters, if more than 7, return ""
+        if (str.length()>7 || str.length()==0) {return "";}
+
+        //Must start with a period or dash, if not, return ""
+        char[] c = str.toCharArray();
+        if (!isSpecialChar(c[0], false)) {return "";}
+
+    	/* Contains at least one alphanumeric character and
+    	   Contains only alphanumeric characters, periods, dashes, or an exclamation point (!)     	 */
+        int count = 0;
+        int countAlphaNum = 0;
+        for (int i = 0; i < str.length(); i++ ) {
+            char d = str.charAt(i) ;
+            if (isAlphaNum(d)|| isSpecialChar((d),false)|| d == '!' )
+            {count++;}
+            if (isAlphaNum(d)) {countAlphaNum++;}
+            //A period, or dash must always be followed by at least one alphanumeric characters, if not, return ""
+            if ((isSpecialChar((str.charAt(str.length()-1)),false)) ||
+                    ((isSpecialChar((d),false) && !isAlphaNum(str.charAt(i+1))))) {return ""; }
+        }
+   		 /*if count number is as same as length of string, it means all chars are meet conditions.
+    		  countAlphaNum >1 means the string contains at least 1 alphanumeric character    	 */
+        if (count != str.length()||countAlphaNum <1) {return "";}
+
+        // return lowerCase string value
+        return str.toLowerCase();
+    }
 
     //returns true if char is english alphabet
     private static boolean isAlphabetic(char c) {
